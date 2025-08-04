@@ -70,8 +70,6 @@ npm start
 - **Permissions**: Create tasks, assign to associates, view all timesheets
 
 ### Associate Accounts
-- **Username**: `associate1` | **Password**: `associate123`
-- **Username**: `associate2` | **Password**: `associate123`
 - **Username**: `melwin` | **Password**: `123123`
 - **Permissions**: View assigned tasks, submit timesheets
 
