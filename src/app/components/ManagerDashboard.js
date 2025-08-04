@@ -26,6 +26,7 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const [filterAssociate, setFilterAssociate] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [searchTask, setSearchTask] = useState('');
 
   useEffect(() => {
     if (initialTasks.length) dispatch(initializeTasks(initialTasks));
@@ -224,6 +225,15 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
               </div>
               <h3 className="text-xl font-bold text-gray-900">All Assigned Tasks</h3>
             </div>
+            <div className="mb-6">
+              <input
+                type="text"
+                placeholder="Search tasks..."
+                value={searchTask}
+                onChange={(e) => setSearchTask(e.target.value)}
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70 w-full max-w-md"
+              />
+            </div>
             <div className="overflow-x-auto rounded-xl">
               <table className="min-w-full">
                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
@@ -263,7 +273,9 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                   </tr>
                 </thead>
                 <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-gray-100">
-                  {[...tasks].sort((a, b) => {
+                  {[...tasks]
+                    .filter(task => task.description.toLowerCase().includes(searchTask.toLowerCase()))
+                    .sort((a, b) => {
                     if (!sortBy) return 0;
                     let result = 0;
                     if (sortBy === 'task') result = a.description.localeCompare(b.description);
