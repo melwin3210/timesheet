@@ -1,10 +1,19 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { z } from 'zod';
 import { fetchTasks, createTask } from '../store/taskSlice';
 import { fetchTimesheets } from '../store/timesheetSlice';
 import { fetchUsers } from '../store/userSlice';
 import { logout } from '../store/authSlice';
+
+const taskSchema = z.object({
+  description: z.string().min(1, 'Task description is required'),
+  estimatedHours: z.string().min(1, 'Estimated hours is required').refine(val => !isNaN(parseFloat(val)) && parseFloat(val) > 0, 'Must be a positive number'),
+  assignedTo: z.string().min(1, 'Please select an associate'),
+  date: z.string().min(1, 'Date is required')
+});
 
 export default function ManagerDashboard({ initialTasks = [], initialTimesheets = [], initialUsers = [] }) {
   const dispatch = useDispatch();
@@ -12,7 +21,6 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const { items: tasks } = useSelector(state => state.tasks);
   const { items: timesheets } = useSelector(state => state.timesheets);
   const { items: users } = useSelector(state => state.users);
-  const [newTask, setNewTask] = useState({ description: '', estimatedHours: '', assignedTo: '', date: '' });
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
@@ -21,12 +29,23 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
     if (initialUsers.length === 0) dispatch(fetchUsers('associate'));
   }, [dispatch, initialTasks.length, initialTimesheets.length, initialUsers.length]);
 
-  const handleCreateTask = async (e) => {
-    e.preventDefault();
-    await dispatch(createTask({ ...newTask, createdBy: user.id }));
-    setNewTask({ description: '', estimatedHours: '', assignedTo: '', date: '' });
+  const handleCreateTask = async (values, { resetForm }) => {
+    await dispatch(createTask({ ...values, createdBy: user.id }));
+    resetForm();
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const validate = (values) => {
+    try {
+      taskSchema.parse(values);
+      return {};
+    } catch (err) {
+      return err.errors.reduce((acc, error) => {
+        acc[error.path[0]] = error.message;
+        return acc;
+      }, {});
+    }
   };
 
   const handleLogout = () => {
@@ -60,57 +79,60 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                   <p className="text-green-800 text-sm font-medium">✓ Task successfully assigned!</p>
                 </div>
               )}
-              <form onSubmit={handleCreateTask} className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Task description"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={newTask.description}
-                    onChange={(e) => setNewTask({...newTask, description: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    placeholder="Estimated hours"
-                    required
-                    step="0.5"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={newTask.estimatedHours}
-                    onChange={(e) => setNewTask({...newTask, estimatedHours: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <select
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={newTask.assignedTo}
-                    onChange={(e) => setNewTask({...newTask, assignedTo: e.target.value})}
+              <Formik
+                initialValues={{ description: '', estimatedHours: '', assignedTo: '', date: '' }}
+                validate={validate}
+                onSubmit={handleCreateTask}
+              >
+                <Form className="space-y-4">
+                  <div>
+                    <Field
+                      name="description"
+                      type="text"
+                      placeholder="Task description"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <Field
+                      name="estimatedHours"
+                      type="number"
+                      placeholder="Estimated hours"
+                      step="0.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    <ErrorMessage name="estimatedHours" component="div" className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <Field
+                      name="assignedTo"
+                      as="select"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                      <option value="">Select Associate</option>
+                      {(users.length > 0 ? users : initialUsers).map(u => (
+                        <option key={u.id} value={u.id}>{u.name}</option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="assignedTo" component="div" className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <Field
+                      name="date"
+                      type="date"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    <ErrorMessage name="date" component="div" className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md text-sm font-medium"
                   >
-                    <option value="">Select Associate</option>
-                    {(users.length > 0 ? users : initialUsers).map(u => (
-                      <option key={u.id} value={u.id}>{u.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <input
-                    type="date"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={newTask.date}
-                    onChange={(e) => setNewTask({...newTask, date: e.target.value})}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md text-sm font-medium"
-                >
-                  Assign Task
-                </button>
-              </form>
+                    Assign Task
+                  </button>
+                </Form>
+              </Formik>
             </div>
           </div>
 
