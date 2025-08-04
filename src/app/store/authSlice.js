@@ -9,6 +9,25 @@ export const loginUser = createAsyncThunk('auth/login', async ({ username, passw
   return userWithoutPassword;
 });
 
+export const signupUser = createAsyncThunk('auth/signup', async ({ username, password, name }) => {
+  const usersResponse = await fetch('http://localhost:3001/users');
+  const users = await usersResponse.json();
+  
+  if (users.find(u => u.username === username)) {
+    throw new Error('Username already exists');
+  }
+  
+  const response = await fetch('http://localhost:3001/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, name, role: 'associate' })
+  });
+  
+  const newUser = await response.json();
+  const { password: _, ...userWithoutPassword } = newUser;
+  return userWithoutPassword;
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: { 
@@ -31,7 +50,14 @@ const authSlice = createSlice({
         state.user = action.payload;
         if (typeof window !== 'undefined') localStorage.setItem('currentUser', JSON.stringify(action.payload));
       })
-      .addCase(loginUser.rejected, (state, action) => { state.loading = false; state.error = action.error.message; });
+      .addCase(loginUser.rejected, (state, action) => { state.loading = false; state.error = action.error.message; })
+      .addCase(signupUser.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(signupUser.fulfilled, (state, action) => { 
+        state.loading = false; 
+        state.user = action.payload;
+        if (typeof window !== 'undefined') localStorage.setItem('currentUser', JSON.stringify(action.payload));
+      })
+      .addCase(signupUser.rejected, (state, action) => { state.loading = false; state.error = action.error.message; });
   }
 });
 
