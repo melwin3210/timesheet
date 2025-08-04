@@ -2,12 +2,18 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function ManagerHeader() {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push('/');
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl border-b border-purple-500/20">
@@ -51,7 +57,7 @@ export default function ManagerHeader() {
               </Link>
             </nav>
             <button
-              onClick={() => dispatch(logout())}
+              onClick={handleLogout}
               className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 text-sm"
             >
               Logout
