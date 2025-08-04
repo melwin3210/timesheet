@@ -30,7 +30,7 @@ export default function TasksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <ManagerHeader />
-      <main className="max-w-7xl mx-auto py-8 px-6">
+      <main className="max-w-7xl mx-auto pt-24 pb-8 px-6">
         <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20">
           <div className="p-8">
             <div className="flex items-center mb-6">
