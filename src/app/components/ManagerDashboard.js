@@ -13,6 +13,7 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const { items: timesheets } = useSelector(state => state.timesheets);
   const { items: users } = useSelector(state => state.users);
   const [newTask, setNewTask] = useState({ description: '', estimatedHours: '', assignedTo: '', date: '' });
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (initialTasks.length === 0) dispatch(fetchTasks());
@@ -20,10 +21,12 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
     if (initialUsers.length === 0) dispatch(fetchUsers('associate'));
   }, [dispatch, initialTasks.length, initialTimesheets.length, initialUsers.length]);
 
-  const handleCreateTask = (e) => {
+  const handleCreateTask = async (e) => {
     e.preventDefault();
-    dispatch(createTask({ ...newTask, createdBy: user.id }));
+    await dispatch(createTask({ ...newTask, createdBy: user.id }));
     setNewTask({ description: '', estimatedHours: '', assignedTo: '', date: '' });
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
   };
 
   const handleLogout = () => {
@@ -52,6 +55,11 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Assign New Task</h3>
+              {showSuccess && (
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                  <p className="text-green-800 text-sm font-medium">✓ Task successfully assigned!</p>
+                </div>
+              )}
               <form onSubmit={handleCreateTask} className="space-y-4">
                 <div>
                   <input
