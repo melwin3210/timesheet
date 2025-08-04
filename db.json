@@ -8,20 +8,6 @@
       "name": "Manager User"
     },
     {
-      "id": 2,
-      "username": "associate1",
-      "password": "associate123",
-      "role": "associate",
-      "name": "Associate One"
-    },
-    {
-      "id": 3,
-      "username": "associate2",
-      "password": "associate123",
-      "role": "associate",
-      "name": "Associate Two"
-    },
-    {
       "username": "melwin",
       "password": "123123",
       "name": "Melwin Fernandez",
