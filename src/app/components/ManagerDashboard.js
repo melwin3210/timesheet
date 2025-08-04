@@ -7,7 +7,7 @@ import { fetchTimesheets, initializeTimesheets } from '../store/timesheetSlice';
 import { fetchUsers, initializeUsers } from '../store/userSlice';
 import { logout } from '../store/authSlice';
 
-const validate = (values) => {
+export const validate = (values) => {
   const errors = {};
   if (!values.description) errors.description = 'Required';
   if (!values.estimatedHours || values.estimatedHours < 0.5) errors.estimatedHours = 'Must be at least 0.5 hours';
