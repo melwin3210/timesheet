@@ -10,7 +10,7 @@ import { logout } from '../store/authSlice';
 
 const taskSchema = z.object({
   description: z.string().min(1, 'Task description is required'),
-  estimatedHours: z.string().min(1, 'Estimated hours is required').refine(val => !isNaN(parseFloat(val)) && parseFloat(val) > 0, 'Must be a positive number'),
+  estimatedHours: z.number().min(0.5, 'Must be at least 0.5 hours'),
   assignedTo: z.string().min(1, 'Please select an associate'),
   date: z.string().min(1, 'Date is required')
 });
@@ -30,7 +30,12 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   }, [dispatch, initialTasks.length, initialTimesheets.length, initialUsers.length]);
 
   const handleCreateTask = async (values, { resetForm }) => {
-    await dispatch(createTask({ ...values, createdBy: user.id }));
+    const taskData = {
+      ...values,
+      estimatedHours: parseFloat(values.estimatedHours),
+      createdBy: user.id
+    };
+    await dispatch(createTask(taskData));
     resetForm();
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -38,7 +43,11 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
 
   const validate = (values) => {
     try {
-      taskSchema.parse(values);
+      const validationData = {
+        ...values,
+        estimatedHours: parseFloat(values.estimatedHours) || 0
+      };
+      taskSchema.parse(validationData);
       return {};
     } catch (err) {
       return err.errors.reduce((acc, error) => {
