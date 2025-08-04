@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "manager",
+      "password": "manager123",
+      "role": "manager",
+      "name": "Manager User"
+    },
+    {
+      "id": 2,
+      "username": "associate1",
+      "password": "associate123",
+      "role": "associate",
+      "name": "Associate One"
+    },
+    {
+      "id": 3,
+      "username": "associate2",
+      "password": "associate123",
+      "role": "associate",
+      "name": "Associate Two"
+    }
+  ],
+  "tasks": [
+    {
+      "description": "bug fix",
+      "estimatedHours": 2,
+      "assignedTo": "2",
+      "date": "2025-08-05",
+      "createdBy": 1,
+      "id": 1
+    }
+  ],
+  "timesheets": [
+    {
+      "userId": 2,
+      "taskId": 1,
+      "date": "2025-08-05",
+      "actualHours": 3,
+      "submitted": true,
+      "id": 1
+    }
+  ]
+}
