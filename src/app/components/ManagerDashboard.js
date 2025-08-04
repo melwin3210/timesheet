@@ -58,17 +58,19 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manager Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {user?.name}</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Manager Dashboard
+              </h1>
+              <p className="text-gray-600 mt-2 text-lg">Welcome back, {user?.name}</p>
             </div>
             <button
               onClick={() => dispatch(logout())}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
               Logout
             </button>
@@ -76,14 +78,28 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto py-6 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Assign New Task</h3>
+      <main className="max-w-7xl mx-auto py-8 px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+            <div className="p-8">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Assign New Task</h3>
+              </div>
               {showSuccess && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
-                  <p className="text-green-800 text-sm">Task successfully assigned!</p>
+                <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl shadow-sm">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className="text-green-800 font-medium">Task successfully assigned!</p>
+                  </div>
                 </div>
               )}
               <Formik
@@ -91,53 +107,55 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                 validate={validate}
                 onSubmit={handleCreateTask}
               >
-                <Form className="space-y-4">
+                <Form className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Task Description</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Task Description</label>
                     <Field
                       name="description"
                       type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter task description"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70"
                     />
-                    <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="description" component="div" className="text-red-500 text-sm mt-2 font-medium" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Estimated Hours</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Estimated Hours</label>
                     <Field
                       name="estimatedHours"
                       type="number"
                       step="0.5"
                       min="0.5"
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="0.5"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70"
                     />
-                    <ErrorMessage name="estimatedHours" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="estimatedHours" component="div" className="text-red-500 text-sm mt-2 font-medium" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Assign To</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Assign To</label>
                     <Field
                       name="assignedTo"
                       as="select"
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70"
                     >
                       <option value="">Select Associate</option>
                       {users.map(u => (
                         <option key={u.id} value={u.id}>{u.name}</option>
                       ))}
                     </Field>
-                    <ErrorMessage name="assignedTo" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="assignedTo" component="div" className="text-red-500 text-sm mt-2 font-medium" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Due Date</label>
                     <Field
                       name="date"
                       type="date"
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70"
                     />
-                    <ErrorMessage name="date" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="date" component="div" className="text-red-500 text-sm mt-2 font-medium" />
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded font-medium"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
                   >
                     Assign Task
                   </button>
@@ -146,14 +164,21 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
             </div>
           </div>
 
-          <div className="bg-white shadow rounded-lg">
-            <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Submitted Timesheets</h3>
-              <div className="mb-4">
+          <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+            <div className="p-8">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Submitted Timesheets</h3>
+              </div>
+              <div className="mb-6">
                 <select
                   value={filterAssociate}
                   onChange={(e) => setFilterAssociate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 hover:bg-white/70"
                 >
                   <option value="">All Associates</option>
                   {users.map(u => (
@@ -161,7 +186,7 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                   ))}
                 </select>
               </div>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
                 {timesheets
                   .filter(t => t.submitted)
                   .filter(t => !filterAssociate || t.userId == filterAssociate)
@@ -169,17 +194,17 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                   const associate = users.find(u => u.id === timesheet.userId);
                   const task = tasks.find(t => t.id === timesheet.taskId);
                   return (
-                    <div key={timesheet.id} className="border border-gray-200 rounded p-3">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="font-medium text-gray-900">{associate?.name}</span>
-                        <span className="text-sm text-gray-500">{timesheet.date}</span>
+                    <div key={timesheet.id} className="bg-white/60 backdrop-blur-sm border border-white/30 rounded-xl p-4 hover:bg-white/80 transition-all duration-200 shadow-sm hover:shadow-md">
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="font-semibold text-gray-900">{associate?.name}</span>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-lg">{timesheet.date}</span>
                       </div>
-                      <div className="text-sm text-gray-700 mb-2">
+                      <div className="text-sm text-gray-700 mb-3">
                         <span className="font-medium">Task:</span> {task?.description}
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-600">Est: {task?.estimatedHours}h</span>
-                        <span className="text-green-600">Actual: {timesheet.actualHours}h</span>
+                        <span className="text-blue-600 font-medium">Est: {task?.estimatedHours}h</span>
+                        <span className="text-green-600 font-medium">Actual: {timesheet.actualHours}h</span>
                       </div>
                     </div>
                   );
@@ -189,48 +214,55 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
           </div>
         </div>
 
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">All Assigned Tasks</h3>
-            <div className="overflow-x-auto">
+        <div className="mt-8 bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+          <div className="p-8">
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mr-4">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">All Assigned Tasks</h3>
+            </div>
+            <div className="overflow-x-auto rounded-xl">
               <table className="min-w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('task')}>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors duration-200" onClick={() => handleSort('task')}>
                       <div className="flex items-center">
                         Task
                         {sortBy === 'task' && (
-                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                          <span className="ml-2 text-blue-600">{sortOrder === 'asc' ? '↑' : '↓'}</span>
                         )}
                       </div>
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('assignee')}>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors duration-200" onClick={() => handleSort('assignee')}>
                       <div className="flex items-center">
                         Assigned To
                         {sortBy === 'assignee' && (
-                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                          <span className="ml-2 text-blue-600">{sortOrder === 'asc' ? '↑' : '↓'}</span>
                         )}
                       </div>
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('date')}>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors duration-200" onClick={() => handleSort('date')}>
                       <div className="flex items-center">
                         Date
                         {sortBy === 'date' && (
-                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                          <span className="ml-2 text-blue-600">{sortOrder === 'asc' ? '↑' : '↓'}</span>
                         )}
                       </div>
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('hours')}>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors duration-200" onClick={() => handleSort('hours')}>
                       <div className="flex items-center">
                         Hours
                         {sortBy === 'hours' && (
-                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                          <span className="ml-2 text-blue-600">{sortOrder === 'asc' ? '↑' : '↓'}</span>
                         )}
                       </div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-gray-100">
                   {[...tasks].sort((a, b) => {
                     if (!sortBy) return 0;
                     let result = 0;
@@ -246,11 +278,13 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                   }).map(task => {
                     const assignee = users.find(u => u.id == task.assignedTo);
                     return (
-                      <tr key={task.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 text-sm text-gray-900">{task.description}</td>
-                        <td className="px-4 py-4 text-sm text-gray-700">{assignee?.name}</td>
-                        <td className="px-4 py-4 text-sm text-gray-700">{task.date}</td>
-                        <td className="px-4 py-4 text-sm text-gray-700">{task.estimatedHours}h</td>
+                      <tr key={task.id} className="hover:bg-white/70 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{task.description}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{assignee?.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg text-xs font-medium">{task.date}</span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-600">{task.estimatedHours}h</td>
                       </tr>
                     );
                   })}
