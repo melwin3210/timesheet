@@ -24,6 +24,8 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const { items: users } = useSelector(state => state.users);
   const [showSuccess, setShowSuccess] = useState(false);
   const [filterAssociate, setFilterAssociate] = useState('');
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     if (initialTasks.length) dispatch(initializeTasks(initialTasks));
@@ -44,6 +46,15 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
     resetForm();
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
   };
 
   return (
@@ -185,14 +196,54 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Task</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigned To</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hours</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('task')}>
+                      <div className="flex items-center">
+                        Task
+                        {sortBy === 'task' && (
+                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('assignee')}>
+                      <div className="flex items-center">
+                        Assigned To
+                        {sortBy === 'assignee' && (
+                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('date')}>
+                      <div className="flex items-center">
+                        Date
+                        {sortBy === 'date' && (
+                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100" onClick={() => handleSort('hours')}>
+                      <div className="flex items-center">
+                        Hours
+                        {sortBy === 'hours' && (
+                          <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                        )}
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {tasks.map(task => {
+                  {[...tasks].sort((a, b) => {
+                    if (!sortBy) return 0;
+                    let result = 0;
+                    if (sortBy === 'task') result = a.description.localeCompare(b.description);
+                    if (sortBy === 'assignee') {
+                      const aName = users.find(u => u.id == a.assignedTo)?.name || '';
+                      const bName = users.find(u => u.id == b.assignedTo)?.name || '';
+                      result = aName.localeCompare(bName);
+                    }
+                    if (sortBy === 'date') result = new Date(a.date) - new Date(b.date);
+                    if (sortBy === 'hours') result = a.estimatedHours - b.estimatedHours;
+                    return sortOrder === 'desc' ? -result : result;
+                  }).map(task => {
                     const assignee = users.find(u => u.id == task.assignedTo);
                     return (
                       <tr key={task.id} className="hover:bg-gray-50">
