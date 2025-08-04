@@ -20,6 +20,13 @@
       "password": "associate123",
       "role": "associate",
       "name": "Associate Two"
+    },
+    {
+      "username": "melwin",
+      "password": "123123",
+      "name": "Melwin Fernandez",
+      "role": "associate",
+      "id": 4
     }
   ],
   "tasks": [
@@ -30,6 +37,38 @@
       "date": "2025-08-05",
       "createdBy": 1,
       "id": 1
+    },
+    {
+      "description": "jjj",
+      "estimatedHours": 7,
+      "assignedTo": "2",
+      "date": "2025-08-15",
+      "createdBy": 1,
+      "id": 2
+    },
+    {
+      "description": "test",
+      "estimatedHours": 2,
+      "assignedTo": "2",
+      "date": "2025-08-21",
+      "createdBy": 1,
+      "id": 3
+    },
+    {
+      "description": "test",
+      "estimatedHours": 1.5,
+      "assignedTo": "4",
+      "date": "2025-08-04",
+      "createdBy": 1,
+      "id": 4
+    },
+    {
+      "description": "test",
+      "estimatedHours": 2,
+      "assignedTo": "4",
+      "date": "2025-08-04",
+      "createdBy": 1,
+      "id": 5
     }
   ],
   "timesheets": [
@@ -40,6 +79,22 @@
       "actualHours": 3,
       "submitted": true,
       "id": 1
+    },
+    {
+      "userId": 4,
+      "taskId": 4,
+      "date": "2025-08-04",
+      "actualHours": 0.5,
+      "submitted": true,
+      "id": 2
+    },
+    {
+      "userId": 4,
+      "taskId": 5,
+      "date": "2025-08-04",
+      "actualHours": 2,
+      "submitted": true,
+      "id": 3
     }
   ]
 }

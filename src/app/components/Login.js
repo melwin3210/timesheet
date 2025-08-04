@@ -134,23 +134,6 @@ export default function Login() {
             </Form>
           </Formik>
           
-          {!isSignup && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-3">Demo Accounts:</p>
-                <div className="space-y-2 text-sm">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="font-medium text-gray-700">Manager</p>
-                    <p className="text-gray-600">username: manager | password: manager123</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="font-medium text-gray-700">Associate</p>
-                    <p className="text-gray-600">username: associate1 | password: associate123</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
