@@ -12,8 +12,8 @@ export default function AssociateDashboard({ initialTasks = [], initialTimesheet
   const { items: allTimesheets } = useSelector(state => state.timesheets);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
-  const tasks = allTasks.length > 0 ? allTasks.filter(t => t.assignedTo == user?.id) : initialTasks;
-  const timesheets = allTimesheets.length > 0 ? allTimesheets.filter(t => t.userId === user?.id) : initialTimesheets;
+  const tasks = allTasks.filter(t => t.assignedTo == user?.id);
+  const timesheets = allTimesheets.filter(t => t.userId === user?.id);
 
   useEffect(() => {
     // Initialize Redux state with SSR data
