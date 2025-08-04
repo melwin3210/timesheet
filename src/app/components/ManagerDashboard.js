@@ -23,6 +23,7 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const { items: timesheets } = useSelector(state => state.timesheets);
   const { items: users } = useSelector(state => state.users);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [filterAssociate, setFilterAssociate] = useState('');
 
   useEffect(() => {
     if (initialTasks.length) dispatch(initializeTasks(initialTasks));
@@ -137,8 +138,23 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
           <div className="bg-white shadow rounded-lg">
             <div className="p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Submitted Timesheets</h3>
+              <div className="mb-4">
+                <select
+                  value={filterAssociate}
+                  onChange={(e) => setFilterAssociate(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Associates</option>
+                  {users.map(u => (
+                    <option key={u.id} value={u.id}>{u.name}</option>
+                  ))}
+                </select>
+              </div>
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {timesheets.filter(t => t.submitted).map(timesheet => {
+                {timesheets
+                  .filter(t => t.submitted)
+                  .filter(t => !filterAssociate || t.userId == filterAssociate)
+                  .map(timesheet => {
                   const associate = users.find(u => u.id === timesheet.userId);
                   const task = tasks.find(t => t.id === timesheet.taskId);
                   return (
