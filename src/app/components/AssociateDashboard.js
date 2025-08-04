@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks, initializeTasks } from '../store/taskSlice';
 import { fetchTimesheets, updateTimesheet, submitTimesheet, initializeTimesheets } from '../store/timesheetSlice';
-import { logout } from '../store/authSlice';
+import AppHeader from './AppHeader';
+
+const associateNavItems = [
+  { href: '/associate', label: 'My Tasks' }
+];
 
 export default function AssociateDashboard({ initialTasks = [], initialTimesheets = [] }) {
   const dispatch = useDispatch();
@@ -38,33 +42,15 @@ export default function AssociateDashboard({ initialTasks = [], initialTimesheet
     dispatch(submitTimesheet({ userId: user.id, date: selectedDate }));
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+
 
   const tasksForDate = tasks.filter(t => t.date === selectedDate);
   const isSubmitted = timesheets.some(t => t.date === selectedDate && t.submitted);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Associate Dashboard</h1>
-              <p className="text-gray-600 mt-1">Welcome back, {user?.name}</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-2 rounded-xl text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <AppHeader navItems={associateNavItems} />
+      <div className="max-w-7xl mx-auto pt-24 pb-8 px-6">
         <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 hover:shadow-2xl transition-all duration-300">
           <div className="px-6 py-6 sm:p-8">
             <div className="flex justify-between items-center mb-8">
