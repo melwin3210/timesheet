@@ -80,31 +80,35 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                 </div>
               )}
               <Formik
-                initialValues={{ description: '', estimatedHours: '', assignedTo: '', date: '' }}
+                initialValues={{ description: '', estimatedHours: '', assignedTo: '', date: new Date().toISOString().split('T')[0] }}
                 validate={validate}
                 onSubmit={handleCreateTask}
               >
                 <Form className="space-y-4">
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Task Description</label>
                     <Field
                       name="description"
                       type="text"
-                      placeholder="Task description"
+                      placeholder="Enter task description"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Estimated Hours</label>
                     <Field
                       name="estimatedHours"
                       type="number"
-                      placeholder="Estimated hours"
+                      placeholder="0.5"
                       step="0.5"
+                      min="0.5"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     <ErrorMessage name="estimatedHours" component="div" className="text-red-600 text-sm mt-1" />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Assign To</label>
                     <Field
                       name="assignedTo"
                       as="select"
@@ -118,6 +122,7 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
                     <ErrorMessage name="assignedTo" component="div" className="text-red-600 text-sm mt-1" />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
                     <Field
                       name="date"
                       type="date"
