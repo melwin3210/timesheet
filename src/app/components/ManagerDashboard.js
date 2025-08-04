@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { z } from 'zod';
-import { fetchTasks, createTask } from '../store/taskSlice';
-import { fetchTimesheets } from '../store/timesheetSlice';
-import { fetchUsers } from '../store/userSlice';
+import { fetchTasks, createTask, initializeTasks } from '../store/taskSlice';
+import { fetchTimesheets, initializeTimesheets } from '../store/timesheetSlice';
+import { fetchUsers, initializeUsers } from '../store/userSlice';
 import { logout } from '../store/authSlice';
 
 const taskSchema = z.object({
@@ -24,10 +24,16 @@ export default function ManagerDashboard({ initialTasks = [], initialTimesheets 
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    if (initialTasks.length === 0) dispatch(fetchTasks());
-    if (initialTimesheets.length === 0) dispatch(fetchTimesheets());
-    if (initialUsers.length === 0) dispatch(fetchUsers('associate'));
-  }, [dispatch, initialTasks.length, initialTimesheets.length, initialUsers.length]);
+    // Initialize Redux state with SSR data
+    if (initialTasks.length > 0) dispatch(initializeTasks(initialTasks));
+    if (initialTimesheets.length > 0) dispatch(initializeTimesheets(initialTimesheets));
+    if (initialUsers.length > 0) dispatch(initializeUsers(initialUsers));
+    
+    // Fetch from API only if no initial data and Redux state is empty
+    if (initialTasks.length === 0 && tasks.length === 0) dispatch(fetchTasks());
+    if (initialTimesheets.length === 0 && timesheets.length === 0) dispatch(fetchTimesheets());
+    if (initialUsers.length === 0 && users.length === 0) dispatch(fetchUsers('associate'));
+  }, [dispatch, initialTasks, initialTimesheets, initialUsers, tasks.length, timesheets.length, users.length]);
 
   const handleCreateTask = async (values, { resetForm }) => {
     const taskData = {

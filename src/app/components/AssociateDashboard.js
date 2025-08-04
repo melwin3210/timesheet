@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTasks } from '../store/taskSlice';
-import { fetchTimesheets, updateTimesheet, submitTimesheet } from '../store/timesheetSlice';
+import { fetchTasks, initializeTasks } from '../store/taskSlice';
+import { fetchTimesheets, updateTimesheet, submitTimesheet, initializeTimesheets } from '../store/timesheetSlice';
 import { logout } from '../store/authSlice';
 
 export default function AssociateDashboard({ initialTasks = [], initialTimesheets = [] }) {
@@ -16,9 +16,14 @@ export default function AssociateDashboard({ initialTasks = [], initialTimesheet
   const timesheets = allTimesheets.length > 0 ? allTimesheets.filter(t => t.userId === user?.id) : initialTimesheets;
 
   useEffect(() => {
-    if (user && initialTasks.length === 0) dispatch(fetchTasks(user.id));
-    if (user && initialTimesheets.length === 0) dispatch(fetchTimesheets(user.id));
-  }, [dispatch, user, initialTasks.length, initialTimesheets.length]);
+    // Initialize Redux state with SSR data
+    if (initialTasks.length > 0) dispatch(initializeTasks(initialTasks));
+    if (initialTimesheets.length > 0) dispatch(initializeTimesheets(initialTimesheets));
+    
+    // Fetch from API only if no initial data and Redux state is empty
+    if (user && initialTasks.length === 0 && allTasks.length === 0) dispatch(fetchTasks(user.id));
+    if (user && initialTimesheets.length === 0 && allTimesheets.length === 0) dispatch(fetchTimesheets(user.id));
+  }, [dispatch, user, initialTasks, initialTimesheets, allTasks.length, allTimesheets.length]);
 
   const handleHoursChange = (taskId, hours) => {
     dispatch(updateTimesheet({

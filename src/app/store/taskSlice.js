@@ -18,7 +18,13 @@ export const createTask = createAsyncThunk('tasks/create', async (taskData) => {
 const taskSlice = createSlice({
   name: 'tasks',
   initialState: { items: [], loading: false },
-  reducers: {},
+  reducers: {
+    initializeTasks: (state, action) => {
+      if (state.items.length === 0) {
+        state.items = action.payload;
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.pending, (state) => { state.loading = true; })
@@ -27,4 +33,5 @@ const taskSlice = createSlice({
   }
 });
 
+export const { initializeTasks } = taskSlice.actions;
 export default taskSlice.reducer;

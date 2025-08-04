@@ -47,7 +47,13 @@ export const submitTimesheet = createAsyncThunk('timesheets/submit', async ({ us
 const timesheetSlice = createSlice({
   name: 'timesheets',
   initialState: { items: [], loading: false },
-  reducers: {},
+  reducers: {
+    initializeTimesheets: (state, action) => {
+      if (state.items.length === 0) {
+        state.items = action.payload;
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTimesheets.pending, (state) => { state.loading = true; })
@@ -66,4 +72,5 @@ const timesheetSlice = createSlice({
   }
 });
 
+export const { initializeTimesheets } = timesheetSlice.actions;
 export default timesheetSlice.reducer;
